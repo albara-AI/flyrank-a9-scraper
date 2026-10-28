@@ -1,7 +1,9 @@
 """fetch -> extract -> normalize -> validate -> store -> report, one stage per function."""
+from clean import validate
 from config import Settings
 from fetcher import FetchError, PoliteFetcher
 from parse import ParseError, parse_book, parse_catalogue
+from store import upsert_books, write_json
 
 
 def discover(settings: Settings, fetcher: PoliteFetcher, failures: list, log=print) -> dict:
@@ -36,3 +38,12 @@ def extract(sources: dict, fetcher: PoliteFetcher, failures: list, log=print) ->
             log(f"SKIP       {url}  ({exc.reason})")
     log(f"detail_pages={len(records)}")
     return records
+
+
+def clean_and_store(settings: Settings, raw: list[dict], log=print) -> dict:
+    """Stage 4: normalize + validate every record, store only the good ones."""
+    books, errors = validate(raw)
+    total = upsert_books(settings.output_dir / "books.json", books)
+    write_json(settings.output_dir / "errors.json", errors)
+    log(f"valid_records={len(books)} invalid_records={len(errors)} books_json_total={total}")
+    return {"valid": len(books), "invalid": len(errors), "total": total}

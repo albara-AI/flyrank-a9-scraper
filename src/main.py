@@ -9,7 +9,7 @@ import sys
 
 from config import Settings
 from fetcher import PoliteFetcher
-from pipeline import discover, extract
+from pipeline import clean_and_store, discover, extract
 
 
 def check_robots(fetcher: PoliteFetcher, settings: Settings) -> int:
@@ -37,7 +37,8 @@ def main(argv=None, session=None, settings=None) -> int:
     raw = extract(found["sources"], fetcher, failures)
     if raw:
         print("sample raw record:\n" + json.dumps(raw[0], indent=2, ensure_ascii=False))
-    return 0 if not failures else 2
+    stored = clean_and_store(settings, raw)
+    return 0 if not failures and not stored["invalid"] else 2
 
 
 if __name__ == "__main__":
