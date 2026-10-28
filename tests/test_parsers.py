@@ -1,5 +1,6 @@
 """Parser and schema tests: fixtures only, no network."""
 import pytest
+from pydantic import ValidationError
 
 from clean import Book, normalize, parse_price, validate
 from parse import ParseError, absolute, parse_book, parse_catalogue
@@ -105,7 +106,7 @@ def test_bad_records_go_to_errors_with_a_reason(overrides, field):
 
 
 def test_schema_rejects_unknown_fields():
-    with pytest.raises(Exception):
+    with pytest.raises(ValidationError):
         Book.model_validate({**normalize(good_raw()), "surprise": 1})
 
 

@@ -1,6 +1,4 @@
 """Politeness rules, proven against the replica transport (no real network)."""
-from dataclasses import replace
-
 import pytest
 
 from config import Settings

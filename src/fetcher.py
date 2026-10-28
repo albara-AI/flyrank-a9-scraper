@@ -65,7 +65,8 @@ class PoliteFetcher:
         raw, fetched_at = self._download(url)
         self.s.cache_dir.mkdir(parents=True, exist_ok=True)
         html_path.write_bytes(raw)
-        meta_path.write_text(json.dumps({"url": url, "status": 200, "fetched_at": fetched_at}), encoding="utf-8")
+        meta = {"url": url, "status": 200, "fetched_at": fetched_at}
+        meta_path.write_text(json.dumps(meta), encoding="utf-8")
         self.stats["pages_fetched"] += 1
         self._log(f"FETCH      {html_path.name}  {len(raw):,} bytes")
         # Decode the bytes ourselves: the server sends no charset, so resp.text would show "Â£51.77".

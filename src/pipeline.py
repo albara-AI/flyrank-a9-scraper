@@ -20,7 +20,7 @@ def discover(settings: Settings, fetcher: PoliteFetcher, failures: list, log=pri
         try:
             page = fetcher.get(page_url)
             links, next_url = parse_catalogue(page.html, page.url)
-        except Exception as exc:  # one bad page must not kill the run
+        except Exception as exc:  # noqa: BLE001 (deliberate: one bad page must not kill the run)
             failures.append({"url": page_url, "stage": "catalogue", "reason": _reason(exc)})
             log(f"SKIP       {page_url}  ({_reason(exc)}); cannot follow 'next' past it")
             break
@@ -40,7 +40,7 @@ def extract(sources: dict, fetcher: PoliteFetcher, failures: list, log=print) ->
         try:
             page = fetcher.get(url)
             records.append(parse_book(page.html, url, source_page, page.fetched_at))
-        except Exception as exc:  # one bad page must not kill the run
+        except Exception as exc:  # noqa: BLE001 (deliberate: one bad page must not kill the run)
             failures.append({"url": url, "stage": "detail", "reason": _reason(exc)})
             log(f"SKIP       {url}  ({_reason(exc)})")
     log(f"detail_pages={len(records)}")

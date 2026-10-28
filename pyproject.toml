@@ -1,0 +1,17 @@
+[tool.pytest.ini_options]
+pythonpath = ["src", "tests"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "I", "BLE"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "fetcher", "parse", "clean", "store", "pipeline", "main", "replica"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/replica.py" = ["E501"]      # real book titles and HTML templates are long by nature
+"tests/replica_run.py" = ["E402"]  # sys.path must be set before importing the project

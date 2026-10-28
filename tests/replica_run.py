@@ -11,9 +11,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path[:0] = [str(ROOT / "src"), str(ROOT / "tests")]
 
-from config import Settings  # noqa: E402
-from main import main  # noqa: E402
-from replica import replica_session  # noqa: E402
+from config import Settings
+from main import main
+from replica import replica_session
 
 if __name__ == "__main__":
     session, adapter = replica_session()

@@ -52,7 +52,7 @@ ODD_TITLE = "replica-book-33_968"                  # entities + non-ASCII in the
 
 def _books():
     books = []
-    for i, (slug, title, price) in enumerate(PAGE_1):
+    for slug, title, price in PAGE_1:
         books.append({"slug": slug, "title": title, "price": price})
     for n in range(21, 61):
         slug = f"replica-book-{n}_{1001 - n}"
@@ -108,7 +108,7 @@ def catalogue_html(page, books):
     {prev}
     <li class="current">Page {page} of 50</li>
     <li class="next"><a href="page-{page + 1}.html">next</a></li>
-</ul></div></div></section></div></div></div></div></body></html>""".encode("utf-8")
+</ul></div></div></section></div></div></div></div></body></html>""".encode()
 
 
 def book_html(b):
@@ -148,7 +148,7 @@ def book_html(b):
 <tr><th>Tax</th><td>£0.00</td></tr>
 <tr><th>Availability</th><td>In stock ({b['stock']} available)</td></tr>
 </table>
-</article></div></div></div></body></html>""".encode("utf-8")
+</article></div></div></div></body></html>""".encode()
 
 
 NOT_FOUND = b"<html><head><title>404 Not Found</title></head><body><h1>Not Found</h1></body></html>"
