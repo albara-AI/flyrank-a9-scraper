@@ -36,7 +36,7 @@ Exit code `0` means a clean run; `2` means the run finished but something failed
 - **Site:** [Books to Scrape](https://books.toscrape.com), part of the toscrape.com sandbox.
 - **Why this site:** toscrape.com describes Books to Scrape as a sandbox built for people to practise web scraping, and the site header itself says "We love being scraped!". That statement is the permission, and a site like this is the only kind this project touches.
 - **Scope:** the first 3 catalogue pages only (`catalogue/page-1.html` to `page-3.html`) and the 60 book pages they link to. A cold run sends about 63 page requests; a cached rerun sends none.
-- **robots.txt:** requested once with `python src/main.py --check-robots`. Result: TODO (paste the printed result after your first real run).
+- **robots.txt:** requested once with `python src/main.py --check-robots`. Result (checked 2026-10-28): no robots file found (HTTP 404). A missing file is not permission; the permission is the sandbox statement on toscrape.com.
 - **Data collected:** public product facts for each book (title, price, availability, star rating, description) plus where and when each page was fetched. No personal data, no accounts, no logins.
 - **Why it is appropriate here:** the owner built the site to be scraped, the scope is tiny, and every request is identified, has a timeout, and is spaced out.
 
@@ -79,7 +79,26 @@ A record that fails the schema goes to `errors.json` with the reason and never r
 
 ## Run report
 
-TODO: paste one real `output/run-report.json` here after your first real run.
+{
+  "started_at": "2026-10-28T08:57:16Z",
+  "finished_at": "2026-10-28T08:58:19Z",
+  "duration_seconds": 63.12,
+  "target": "https://books.toscrape.com/catalogue/page-1.html",
+  "catalogue_pages": 3,
+  "discovered_urls": 60,
+  "unique_urls": 60,
+  "injected_urls": 0,
+  "network_requests": 63,
+  "pages_fetched": 63,
+  "cache_hits": 0,
+  "retries": 0,
+  "detail_pages": 60,
+  "valid_records": 60,
+  "invalid_records": 0,
+  "failed_pages": 0,
+  "books_json_total": 60,
+  "failures": []
+}
 
 ## Why no browser
 
@@ -94,6 +113,8 @@ The 40 tests cover politeness (user-agent, timeout, delay, cache, retry rules), 
 ## One honest limitation
 
 The selectors are tied to Books to Scrape's current HTML. If the layout changes, pages fail loudly (a `ParseError` counted in `failed_pages`, or schema errors in `errors.json`) rather than producing wrong data, but they do fail; nothing heals itself. Also, the cache never expires: delete `cache/` to collect fresh data.
+
+Descriptions are stored exactly as the site serves them, including its own quirks: a repeated opening sentence, words joined where line breaks used to be (e.g. "treetopDon't", confirmed in the cached HTML), and a trailing "...more". Cleaning them is left to whoever consumes the data.
 
 ## Ethics note
 

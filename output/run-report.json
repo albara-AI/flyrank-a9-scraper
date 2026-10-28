@@ -1,0 +1,20 @@
+{
+  "started_at": "2026-10-28T09:07:20Z",
+  "finished_at": "2026-10-28T09:07:21Z",
+  "duration_seconds": 0.52,
+  "target": "https://books.toscrape.com/catalogue/page-1.html",
+  "catalogue_pages": 3,
+  "discovered_urls": 60,
+  "unique_urls": 60,
+  "injected_urls": 0,
+  "network_requests": 0,
+  "pages_fetched": 0,
+  "cache_hits": 63,
+  "retries": 0,
+  "detail_pages": 60,
+  "valid_records": 60,
+  "invalid_records": 0,
+  "failed_pages": 0,
+  "books_json_total": 60,
+  "failures": []
+}
