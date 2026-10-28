@@ -1,0 +1,9 @@
+# Cached HTML: the site should feel each page once, GitHub should never see it
+cache/
+# Offline replica runs (tests/replica_run.py): fake data must never mix with real output
+.replica/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
