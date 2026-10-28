@@ -7,7 +7,8 @@ import argparse
 import sys
 
 from config import Settings
-from fetcher import FetchError, PoliteFetcher
+from fetcher import PoliteFetcher
+from pipeline import discover
 
 
 def check_robots(fetcher: PoliteFetcher, settings: Settings) -> int:
@@ -30,13 +31,9 @@ def main(argv=None, session=None, settings=None) -> int:
     fetcher = PoliteFetcher(settings, session=session)
     if args.check_robots:
         return check_robots(fetcher, settings)
-    try:
-        page = fetcher.get(settings.start_url)
-    except FetchError as exc:
-        print(f"FAILED     {exc}")
-        return 2
-    print(f"page 1 ok: {page.size_bytes:,} bytes, fetched_at={page.fetched_at}, from_cache={page.from_cache}")
-    return 0
+    failures = []
+    found = discover(settings, fetcher, failures)
+    return 0 if not failures and found["catalogue_pages"] == settings.max_catalogue_pages else 2
 
 
 if __name__ == "__main__":
