@@ -4,11 +4,12 @@
     python src/main.py --check-robots   Stage 0: request robots.txt once
 """
 import argparse
+import json
 import sys
 
 from config import Settings
 from fetcher import PoliteFetcher
-from pipeline import discover
+from pipeline import discover, extract
 
 
 def check_robots(fetcher: PoliteFetcher, settings: Settings) -> int:
@@ -33,7 +34,10 @@ def main(argv=None, session=None, settings=None) -> int:
         return check_robots(fetcher, settings)
     failures = []
     found = discover(settings, fetcher, failures)
-    return 0 if not failures and found["catalogue_pages"] == settings.max_catalogue_pages else 2
+    raw = extract(found["sources"], fetcher, failures)
+    if raw:
+        print("sample raw record:\n" + json.dumps(raw[0], indent=2, ensure_ascii=False))
+    return 0 if not failures else 2
 
 
 if __name__ == "__main__":
