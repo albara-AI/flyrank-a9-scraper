@@ -1,22 +1,17 @@
 """A9 polite scraper — entry point.
 
-Stage 0 command:  python src/main.py --check-robots
+    python src/main.py                  run the scraper
+    python src/main.py --check-robots   Stage 0: request robots.txt once
 """
 import argparse
 import sys
 
-import requests
-
 from config import Settings
+from fetcher import FetchError, PoliteFetcher
 
 
-def check_robots(settings: Settings) -> int:
-    """Request robots.txt exactly once, identified, with a timeout, and say what happened."""
-    resp = requests.get(
-        settings.robots_url,
-        headers={"User-Agent": settings.user_agent},
-        timeout=settings.timeout_seconds,
-    )
+def check_robots(fetcher: PoliteFetcher, settings: Settings) -> int:
+    resp = fetcher.probe(settings.robots_url)
     if resp.status_code == 200:
         print(f"robots.txt: found (HTTP 200)\n{resp.text.strip() or '(empty file)'}")
     elif resp.status_code == 404:
@@ -27,14 +22,20 @@ def check_robots(settings: Settings) -> int:
     return 0
 
 
-def main(argv=None) -> int:
+def main(argv=None, session=None, settings=None) -> int:
     parser = argparse.ArgumentParser(description="Polite Books to Scrape scraper (FlyRank A9)")
     parser.add_argument("--check-robots", action="store_true", help="Stage 0: request robots.txt once")
     args = parser.parse_args(argv)
-    settings = Settings()
+    settings = settings or Settings()
+    fetcher = PoliteFetcher(settings, session=session)
     if args.check_robots:
-        return check_robots(settings)
-    print(f"Target: {settings.start_url} (first {settings.max_catalogue_pages} catalogue pages)")
+        return check_robots(fetcher, settings)
+    try:
+        page = fetcher.get(settings.start_url)
+    except FetchError as exc:
+        print(f"FAILED     {exc}")
+        return 2
+    print(f"page 1 ok: {page.size_bytes:,} bytes, fetched_at={page.fetched_at}, from_cache={page.from_cache}")
     return 0
 
 
